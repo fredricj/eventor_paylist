@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {type Ref, ref} from "vue";
 import {extractFeesFromFileList} from "@/utils.ts";
+import EventListView from "@/components/EventListView.vue";
 
 const names: Ref<FileList | undefined | null> = ref();
 const haveOutput: Ref<boolean> = ref(false);
@@ -40,11 +41,7 @@ async function extractFees() {
   </form>
   <div v-if="events.size > 0">
     <h2>Out:</h2>
-    <ul>
-      <li v-for="eventName in events.values()">
-        {{ eventName }}
-      </li>
-    </ul>
+    <EventListView :events=events />
   </div>
 </template>
 
