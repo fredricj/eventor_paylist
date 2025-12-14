@@ -100,7 +100,7 @@ export async function extractFeesFromFileList(files: FileList): Promise<{events:
   const competitors = new Map<number, Competitor>();
   const events = new Map<number, string>;
   for (const file of files) {
-    let {eventId, eventName} = await retrieveEntriesFromEventorIofXml(file, competitors);
+    const {eventId, eventName} = await retrieveEntriesFromEventorIofXml(file, competitors);
     events.set(eventId, eventName);
   }
   return {events, competitors};

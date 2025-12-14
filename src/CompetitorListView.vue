@@ -8,7 +8,7 @@ const props = defineProps<{
 
 function calculateSum(arr: MapIterator<number>) {
   let sum = 0;
-  for (let i of arr) {
+  for (const i of arr) {
     sum += i;
   }
   return sum;
