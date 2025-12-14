@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import {type Ref, ref} from "vue";
+import {computed, type Ref, ref} from "vue";
 import {extractFeesFromFileList} from "@/utils.ts";
 import EventListView from "@/components/EventListView.vue";
 import CompetitorListView from "@/CompetitorListView.vue";
-import type {CompetitorMap} from "@/Competitor.ts";
+import {Competitor, type CompetitorList, type CompetitorMap} from "@/Competitor.ts";
 
 const names: Ref<FileList | undefined | null> = ref();
 const haveOutput: Ref<boolean> = ref(false);
 const events: Ref<Map<number, string>> = ref(new Map<number, string>());
 const competitors: Ref<CompetitorMap> = ref(new Map());
+const filterSwedish = ref(true);
 function fileselected(event: Event) {
   names.value = (event.target as HTMLInputElement).files;
 }
@@ -21,6 +22,32 @@ async function extractFees() {
     competitors.value = competitorsParsed;
   }
 }
+const filteredCompetitors = computed<CompetitorList>(function() {
+  let l = [...competitors.value.values()];
+  if (filterSwedish.value) {
+    l = l.filter((v) => v.organisationCountry !== "Sweden");
+  }
+  return l.sort(function(a: Competitor, b: Competitor) {
+    const sCountry = (a.organisationCountry??'').localeCompare(b.organisationCountry??'');
+    if (sCountry !== 0) {
+      return sCountry;
+    }
+    const sClub = (a.club??'').localeCompare(b.club??'');
+    if (sClub !== 0) {
+      return sClub;
+    }
+    const sFamily = a.familyName.localeCompare(b.familyName);
+    if (sFamily !== 0) {
+      return sFamily;
+    }
+    const sGiven = a.givenName.localeCompare(b.givenName);
+    if (sGiven !== 0) {
+      return sGiven;
+    }
+    return a.classNames.size - b.classNames.size;
+  });
+} );
+
 
 </script>
 
@@ -42,11 +69,15 @@ async function extractFees() {
         <input type="button" name="convert" value="Extract fees" @click="extractFees">
       </div>
     </div>
+    <div>
+      <label for="filterNonmembers">Exclude members of Swedish clubs</label>
+      <input type="checkbox" name="filterNonmembers" id="filterNonmembers" v-model="filterSwedish">
+    </div>
   </form>
   <div v-if="events.size > 0">
     <h2>Out:</h2>
     <EventListView :events=events />
-    <CompetitorListView :events="events" :competitors="competitors" />
+    <CompetitorListView :events="events" :competitors="filteredCompetitors" />
   </div>
 </template>
 

@@ -18,3 +18,4 @@ export class Competitor {
 }
 
 export type CompetitorMap = Map<number, Competitor>;
+export type CompetitorList = Competitor[];
