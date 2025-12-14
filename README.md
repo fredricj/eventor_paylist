@@ -1,1 +1,1 @@
-# eventor_paylist
+# eventor-paylist
