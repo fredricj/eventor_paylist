@@ -2,19 +2,23 @@
 import {type Ref, ref} from "vue";
 import {extractFeesFromFileList} from "@/utils.ts";
 import EventListView from "@/components/EventListView.vue";
+import CompetitorListView from "@/CompetitorListView.vue";
+import type {CompetitorList} from "@/Competitor.ts";
 
 const names: Ref<FileList | undefined | null> = ref();
 const haveOutput: Ref<boolean> = ref(false);
 const events: Ref<Map<number, string>> = ref(new Map<number, string>());
+const competitors: Ref<CompetitorList> = ref(new Map());
 function fileselected(event: Event) {
   names.value = (event.target as HTMLInputElement).files;
 }
 
 async function extractFees() {
-  const {events: eventsParsed, competitors} = await extractFeesFromFileList(names.value as FileList);
+  const {events: eventsParsed, competitors: competitorsParsed} = await extractFeesFromFileList(names.value as FileList);
   haveOutput.value = eventsParsed.size > 0;
   if (haveOutput.value) {
     events.value = eventsParsed;
+    competitors.value = competitorsParsed;
   }
 }
 
@@ -42,6 +46,7 @@ async function extractFees() {
   <div v-if="events.size > 0">
     <h2>Out:</h2>
     <EventListView :events=events />
+    <CompetitorListView :events="events" :competitors="competitors" />
   </div>
 </template>
 
