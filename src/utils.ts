@@ -1,10 +1,10 @@
-import {Competitor, type CompetitorList} from "@/Competitor.ts";
+import {Competitor, type CompetitorMap} from "@/Competitor.ts";
 
 const NS = "http://www.orienteering.org/datastandard/3.0";
 
 const nsResolver = (prefix: string | null) => prefix === "ns" ? NS : null;
 
-export async function retrieveEntriesFromEventorIofXml(file: File, competitors: CompetitorList): Promise<{eventId: number, eventName: string}> {
+export async function retrieveEntriesFromEventorIofXml(file: File, competitors: CompetitorMap): Promise<{eventId: number, eventName: string}> {
   const xmlText = await file.text();
   const xml = new DOMParser().parseFromString(xmlText, "application/xml");
   const evaluator = new XPathEvaluator();
@@ -96,7 +96,7 @@ export async function retrieveEntriesFromEventorIofXml(file: File, competitors: 
   return {eventId, eventName};
 }
 
-export async function extractFeesFromFileList(files: FileList): Promise<{events: Map<number, string>, competitors: CompetitorList}> {
+export async function extractFeesFromFileList(files: FileList): Promise<{events: Map<number, string>, competitors: CompetitorMap}> {
   const competitors = new Map<number, Competitor>();
   const events = new Map<number, string>;
   for (const file of files) {

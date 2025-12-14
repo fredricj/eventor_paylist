@@ -3,12 +3,12 @@ import {type Ref, ref} from "vue";
 import {extractFeesFromFileList} from "@/utils.ts";
 import EventListView from "@/components/EventListView.vue";
 import CompetitorListView from "@/CompetitorListView.vue";
-import type {CompetitorList} from "@/Competitor.ts";
+import type {CompetitorMap} from "@/Competitor.ts";
 
 const names: Ref<FileList | undefined | null> = ref();
 const haveOutput: Ref<boolean> = ref(false);
 const events: Ref<Map<number, string>> = ref(new Map<number, string>());
-const competitors: Ref<CompetitorList> = ref(new Map());
+const competitors: Ref<CompetitorMap> = ref(new Map());
 function fileselected(event: Event) {
   names.value = (event.target as HTMLInputElement).files;
 }

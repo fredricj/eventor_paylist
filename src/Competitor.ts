@@ -17,4 +17,4 @@ export class Competitor {
   }
 }
 
-export type CompetitorList = Map<number, Competitor>;
+export type CompetitorMap = Map<number, Competitor>;
