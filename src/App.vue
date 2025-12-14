@@ -3,12 +3,12 @@ import {computed, type Ref, ref} from "vue";
 import {extractFeesFromFileList} from "@/utils.ts";
 import EventListView from "@/components/EventListView.vue";
 import CompetitorListView from "@/CompetitorListView.vue";
-import {Competitor, type CompetitorList, type CompetitorMap} from "@/Competitor.ts";
+import {Competitor, type CompetitorList} from "@/Competitor.ts";
 
 const names: Ref<FileList | undefined | null> = ref();
 const haveOutput: Ref<boolean> = ref(false);
 const events: Ref<Map<number, string>> = ref(new Map<number, string>());
-const competitors: Ref<CompetitorMap> = ref(new Map());
+const competitors: Ref<CompetitorList> = ref([]);
 const filterSwedish = ref(true);
 function fileselected(event: Event) {
   names.value = (event.target as HTMLInputElement).files;
@@ -23,7 +23,7 @@ async function extractFees() {
   }
 }
 const filteredCompetitors = computed<CompetitorList>(function() {
-  let l = [...competitors.value.values()];
+  let l = [...competitors.value];
   if (filterSwedish.value) {
     l = l.filter((v) => v.organisationCountry !== "Sweden");
   }
