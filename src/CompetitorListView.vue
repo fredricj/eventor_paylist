@@ -6,13 +6,6 @@ const props = defineProps<{
   competitors: CompetitorList
 }>();
 
-function calculateSum(arr: MapIterator<number>) {
-  let sum = 0;
-  for (const i of arr) {
-    sum += i;
-  }
-  return sum;
-}
 </script>
 
 <template>
@@ -40,7 +33,7 @@ function calculateSum(arr: MapIterator<number>) {
       <th v-for="eventId in props.events.keys()" :key="eventId">
         {{ competitor.competitionFees.get(eventId) ?? ''}}
       </th>
-      <td>{{ calculateSum(competitor.competitionFees.values())  }}</td>
+      <td>{{ competitor.totalFees  }}</td>
     </tr>
     </tbody>
   </table>
