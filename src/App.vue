@@ -14,6 +14,8 @@ const downloadLink = useTemplateRef('downloadLink');
 
 function fileselected(event: Event) {
   names.value = (event.target as HTMLInputElement).files;
+  events.value.clear();
+  competitors.value = [];
 }
 
 async function extractFees() {
