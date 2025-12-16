@@ -106,3 +106,38 @@ export async function extractFeesFromFileList(files: FileList): Promise<{events:
   const competitors = [...competitorsMap.values()];
   return {events, competitors: competitors};
 }
+
+export function generateCSV(events: Map<number, string>, competitors: CompetitorList) {
+  let csv = '';
+  // Loop the array of objects
+  const headers: {key: string|((obj: Competitor) => string), header: string}[] = [
+    {'key': 'givenName', 'header': 'Förnamn'},
+    {'key': 'familyName', 'header': 'Efternamn'},
+    {'key': 'club', 'header': 'Klubb'},
+    {'key': 'organisationCountry', 'header': 'Land'},
+    {'key': (obj: Competitor) => [...obj.classNames].join(','), 'header': 'Klass'},
+  ];
+  for (const [eventId, eventName] of events.entries()) {
+    headers.push({'key': (obj: Competitor) => String(obj.competitionFees.get(eventId) ?? ''), 'header': eventName, });
+  }
+  headers.push({'key': 'totalFees', 'header': 'Totalt'});
+
+  const headerCount = headers.length
+  for(let row = 0; row < competitors.length; row++){
+    const competitor = competitors[row] as Competitor;
+    if (row === 0){
+      let keysCounter = 0
+      for (const v of headers) {
+        csv += v.header + (keysCounter+1 < headerCount ? '\t' : '\n' )
+        keysCounter++
+      }
+    }
+    let keysCounter = 0;
+    for (const v of headers) {
+      csv += (v.key instanceof Function ? v.key(competitor) : competitor[v.key as keyof Competitor] as string);
+      csv += (keysCounter+1 < headerCount ? '\t' : '\n' );
+      keysCounter++
+    }
+  }
+  return csv;
+}

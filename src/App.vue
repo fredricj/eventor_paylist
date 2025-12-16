@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {computed, type Ref, ref} from "vue";
-import {extractFeesFromFileList} from "@/utils.ts";
+import {computed, type Ref, ref, useTemplateRef, watch} from "vue";
+import {extractFeesFromFileList, generateCSV} from "@/utils.ts";
 import EventListView from "@/components/EventListView.vue";
 import CompetitorListView from "@/CompetitorListView.vue";
 import {Competitor, type CompetitorList} from "@/Competitor.ts";
@@ -10,6 +10,8 @@ const haveOutput: Ref<boolean> = ref(false);
 const events: Ref<Map<number, string>> = ref(new Map<number, string>());
 const competitors: Ref<CompetitorList> = ref([]);
 const filterSwedish = ref(true);
+const downloadLink = useTemplateRef('downloadLink');
+
 function fileselected(event: Event) {
   names.value = (event.target as HTMLInputElement).files;
 }
@@ -48,6 +50,13 @@ const filteredCompetitors = computed<CompetitorList>(function() {
   });
 } );
 
+watch([filteredCompetitors, downloadLink], () => {
+  if (downloadLink.value) {
+    const csvData = generateCSV(events.value, filteredCompetitors.value);
+    downloadLink.value.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(csvData);
+    downloadLink.value.download = 'betallista.csv';
+  }
+});
 
 </script>
 
@@ -77,6 +86,7 @@ const filteredCompetitors = computed<CompetitorList>(function() {
   <div v-if="events.size > 0">
     <h2>Out:</h2>
     <EventListView :events=events />
+    <a href="" id="downloadLink" ref="downloadLink" download="">Download list</a>
     <CompetitorListView :events="events" :competitors="filteredCompetitors" />
   </div>
 </template>
