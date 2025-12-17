@@ -9,6 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
+  <div>
   <table>
     <thead>
     <tr>
@@ -30,16 +31,26 @@ const props = defineProps<{
       <td>{{ competitor.club }}</td>
       <td>{{ competitor.organisationCountry }}</td>
       <td>{{ [...competitor.classNames].join(',') }}</td>
-      <th v-for="eventId in props.events.keys()" :key="eventId">
+      <td v-for="eventId in props.events.keys()" :key="eventId">
         {{ competitor.competitionFees.get(eventId) ?? ''}}
-      </th>
+      </td>
       <td>{{ competitor.totalFees  }}</td>
     </tr>
     </tbody>
   </table>
-
+  </div>
 </template>
 
 <style scoped>
+  td, th {
+    border-right: 1px darkgray solid;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  th {
+    text-align: left;
+  }
+  td {
 
+  }
 </style>

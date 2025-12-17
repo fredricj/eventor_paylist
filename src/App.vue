@@ -67,34 +67,56 @@ watch([filteredCompetitors, downloadLink], () => {
   <p>
     Generate list of amount to pay for competitors
   </p>
-  <form>
+  <div class="data">
     <input type="file" name="infiles" multiple @change="fileselected" accept=".xml"/>
     <div v-if="names && names.length > 0">
-      <p>Selected files:</p>
-      <ul>
-      <li v-for="item in names" :key="item.name">
-        {{ item.name }}
-      </li>
-      </ul>
+      <div style="display: flex;">
+        <div>
+          <p>Selected files:</p>
+        </div>
+        <div>
+          <ul>
+          <li v-for="item in names" :key="item.name">
+            {{ item.name }}
+          </li>
+          </ul>
+        </div>
+      </div>
       <div>
         <input type="button" name="convert" value="Extract fees" @click="extractFees">
       </div>
+      <div>
+        <label for="filterNonmembers">Exclude members of Swedish clubs</label>
+        <input type="checkbox" name="filterNonmembers" id="filterNonmembers" v-model="filterSwedish">
+      </div>
     </div>
-    <div>
-      <label for="filterNonmembers">Exclude members of Swedish clubs</label>
-      <input type="checkbox" name="filterNonmembers" id="filterNonmembers" v-model="filterSwedish">
+    <div v-if="events.size > 0" class="output">
+      <h2>Events:</h2>
+      <EventListView :events=events />
+      <h3>Competitors:</h3>
+      <a href="" class="downloadLink" ref="downloadLink" download="">Download list</a>
+      <CompetitorListView :events="events" :competitors="filteredCompetitors" />
     </div>
-  </form>
-  <div v-if="events.size > 0">
-    <h2>Out:</h2>
-    <EventListView :events=events />
-    <a href="" id="downloadLink" ref="downloadLink" download="">Download list</a>
-    <CompetitorListView :events="events" :competitors="filteredCompetitors" />
   </div>
+
 </template>
 
 <style scoped>
-form {
-  background-color: lightblue;
+div.data {
+  background-color: lightgrey;
+  padding: 1em;
+  width: fit-content;
+  min-width: 30em;
+  border-radius: 1em;
+}
+.output {
+  background-color: lightgreen;
+  padding: 1em;
+  border-radius: 1em;
+  width: fit-content;
+  margin-top: 1em;
+}
+.downloadLink {
+  margin-top: 1em;
 }
 </style>
