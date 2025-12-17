@@ -111,10 +111,10 @@ export function generateCSV(events: Map<number, string>, competitors: Competitor
   let csv = '';
   // Loop the array of objects
   const headers: {key: string|((obj: Competitor) => string), header: string}[] = [
-    {'key': 'givenName', 'header': 'Förnamn'},
-    {'key': 'familyName', 'header': 'Efternamn'},
-    {'key': 'club', 'header': 'Klubb'},
     {'key': 'organisationCountry', 'header': 'Land'},
+    {'key': 'club', 'header': 'Klubb'},
+    {'key': 'familyName', 'header': 'Efternamn'},
+    {'key': 'givenName', 'header': 'Förnamn'},
     {'key': (obj: Competitor) => [...obj.classNames].join(','), 'header': 'Klass'},
   ];
   for (const [eventId, eventName] of events.entries()) {

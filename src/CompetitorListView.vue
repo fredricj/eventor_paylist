@@ -13,10 +13,10 @@ const props = defineProps<{
   <table>
     <thead>
     <tr>
-      <th>Förnamn</th>
-      <th>Efternamn</th>
-      <th>Klubb</th>
       <th>Land</th>
+      <th>Klubb</th>
+      <th>Efternamn</th>
+      <th>Förnamn</th>
       <th>Klass</th>
       <th v-for="(eventName, eventId) in props.events.values()" :key="eventId">
         {{eventName}}
@@ -26,10 +26,10 @@ const props = defineProps<{
     </thead>
     <tbody>
     <tr v-for="(competitor, eventId) in props.competitors.values()" :key="eventId">
-      <td>{{ competitor.givenName }}</td>
-      <td>{{ competitor.familyName }}</td>
-      <td>{{ competitor.club }}</td>
       <td>{{ competitor.organisationCountry }}</td>
+      <td>{{ competitor.club }}</td>
+      <td>{{ competitor.familyName }}</td>
+      <td>{{ competitor.givenName }}</td>
       <td>{{ [...competitor.classNames].join(',') }}</td>
       <td v-for="eventId in props.events.keys()" :key="eventId">
         {{ competitor.competitionFees.get(eventId) ?? ''}}
