@@ -2,7 +2,7 @@
 import {computed, type Ref, ref, useTemplateRef, watch} from "vue";
 import {extractFeesFromFileList, generateCSV} from "@/utils.ts";
 import EventListView from "@/components/EventListView.vue";
-import CompetitorListView from "@/CompetitorListView.vue";
+import CompetitorListView from "@/components/CompetitorListView.vue";
 import {Competitor, type CompetitorList} from "@/Competitor.ts";
 
 const names: Ref<FileList | undefined | null> = ref();
