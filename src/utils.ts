@@ -4,7 +4,7 @@ const NS = "http://www.orienteering.org/datastandard/3.0";
 
 const nsResolver = (prefix: string | null) => prefix === "ns" ? NS : null;
 
-export async function retrieveEntriesFromEventorIofXml(file: File, competitors: CompetitorMap): Promise<{eventId: number, eventName: string}> {
+export async function retrieveEntriesFromEventorIofXml(file: File, competitors: CompetitorMap, cardFee: number): Promise<{eventId: number, eventName: string}> {
   const xmlText = await file.text();
   const xml = new DOMParser().parseFromString(xmlText, "application/xml");
   const evaluator = new XPathEvaluator();
@@ -89,6 +89,15 @@ export async function retrieveEntriesFromEventorIofXml(file: File, competitors: 
       }
       entryFee += amount;
     }
+
+    const controlCard = xpathNodes(
+      entry,
+      ".//ns:ControlCard"
+    );
+    if (!controlCard.length) {
+      entryFee += cardFee;
+    }
+
     competitor.competitionFees.set(eventId, entryFee);
     competitor.classNames.add(className);
   }
@@ -96,11 +105,11 @@ export async function retrieveEntriesFromEventorIofXml(file: File, competitors: 
   return {eventId, eventName};
 }
 
-export async function extractFeesFromFileList(files: FileList): Promise<{events: Map<number, string>, competitors: CompetitorList}> {
+export async function extractFeesFromFileList(files: FileList, cardFee: number): Promise<{events: Map<number, string>, competitors: CompetitorList}> {
   const competitorsMap = new Map<number, Competitor>();
   const events = new Map<number, string>;
   for (const file of files) {
-    const {eventId, eventName} = await retrieveEntriesFromEventorIofXml(file, competitorsMap);
+    const {eventId, eventName} = await retrieveEntriesFromEventorIofXml(file, competitorsMap, cardFee);
     events.set(eventId, eventName);
   }
   const competitors = [...competitorsMap.values()];

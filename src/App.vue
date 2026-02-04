@@ -11,6 +11,7 @@ const events: Ref<Map<number, string>> = ref(new Map<number, string>());
 const competitors: Ref<CompetitorList> = ref([]);
 const filterSwedish = ref(true);
 const downloadLink = useTemplateRef('downloadLink');
+const cardFee = ref(40);
 
 function fileselected(event: Event) {
   names.value = (event.target as HTMLInputElement).files;
@@ -19,7 +20,7 @@ function fileselected(event: Event) {
 }
 
 async function extractFees() {
-  const {events: eventsParsed, competitors: competitorsParsed} = await extractFeesFromFileList(names.value as FileList);
+  const {events: eventsParsed, competitors: competitorsParsed} = await extractFeesFromFileList(names.value as FileList, cardFee.value);
   haveOutput.value = eventsParsed.size > 0;
   if (haveOutput.value) {
     events.value = eventsParsed;
@@ -81,6 +82,10 @@ watch([filteredCompetitors, downloadLink], () => {
           </li>
           </ul>
         </div>
+      </div>
+      <div style="margin-bottom: 1rem;">
+        <label for="cardFee">Card Fee: </label>
+        <input type="text" id="cardFee" v-model="cardFee" name="cardFee" maxlength="3" size="3">
       </div>
       <div>
         <input type="button" name="convert" value="Extract fees" @click="extractFees">
