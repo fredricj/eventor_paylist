@@ -94,11 +94,13 @@ export async function retrieveEntriesFromEventorIofXml(file: File, competitors: 
       entry,
       ".//ns:ControlCard"
     );
+    let thisCardFee = 0;
     if (!controlCard.length) {
-      entryFee += cardFee;
+      thisCardFee += cardFee;
     }
 
-    competitor.competitionFees.set(eventId, entryFee);
+
+    competitor.competitionFees.set(eventId, {entryFee: entryFee, cardFee: thisCardFee});
     competitor.classNames.add(className);
   }
 
@@ -127,7 +129,8 @@ export function generateCSV(events: Map<number, string>, competitors: Competitor
     {'key': (obj: Competitor) => [...obj.classNames].join(','), 'header': 'Klass'},
   ];
   for (const [eventId, eventName] of events.entries()) {
-    headers.push({'key': (obj: Competitor) => String(obj.competitionFees.get(eventId) ?? ''), 'header': eventName, });
+    headers.push({'key': (obj: Competitor) => String(obj.competitionFees.get(eventId)?.entryFee ?? ''), 'header': eventName, });
+    headers.push({'key': (obj: Competitor) => String((obj.competitionFees.get(eventId)?.cardFee ?? 0) > 0 ? obj.competitionFees.get(eventId)?.cardFee : ''), 'header': eventName + " Hyravg.", });
   }
   headers.push({'key': 'totalFees', 'header': 'Totalt'});
 

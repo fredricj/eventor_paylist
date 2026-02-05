@@ -18,9 +18,10 @@ const props = defineProps<{
       <th>Efternamn</th>
       <th>Förnamn</th>
       <th>Klass</th>
-      <th v-for="(eventName, eventId) in props.events.values()" :key="eventId">
-        {{eventName}}
-      </th>
+      <template v-for="(eventName, eventId) in props.events.values()" :key="eventId">
+        <th>{{eventName}}</th>
+        <th>{{eventName}} Hyravg.</th>
+      </template>
       <th>Total</th>
     </tr>
     </thead>
@@ -31,9 +32,10 @@ const props = defineProps<{
       <td>{{ competitor.familyName }}</td>
       <td>{{ competitor.givenName }}</td>
       <td>{{ [...competitor.classNames].join(',') }}</td>
-      <td v-for="eventId in props.events.keys()" :key="eventId">
-        {{ competitor.competitionFees.get(eventId) ?? ''}}
-      </td>
+      <template v-for="eventId in props.events.keys()" :key="eventId">
+        <td>{{ competitor.competitionFees.get(eventId)?.entryFee ?? '' }}</td>
+        <td>{{ (competitor.competitionFees.get(eventId)?.cardFee ?? 0) > 0 ? competitor.competitionFees.get(eventId)?.cardFee : '' }}</td>
+      </template>
       <td>{{ competitor.totalFees  }}</td>
     </tr>
     </tbody>
